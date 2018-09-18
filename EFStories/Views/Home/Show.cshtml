@@ -1,0 +1,23 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Home Page";
+}
+
+
+<div class="jumbotron">
+    <h1>#EFstories</h1>
+    <p class="lead">
+        Want to share your #EFstories and inspire others to live abroad and learn a language?
+    </p>
+    <p><a href="#" class="btn btn-primary btn-lg">Upload &raquo;</a></p>
+</div>
+
+@foreach (EFStories.Models.Image img in @Model.Images)
+{
+<div class="item">
+
+    <a href="@img.Url" target="_blank"><img src="@Model.CloudinaryApi.UrlImgUp.Format(img.Format).Transform(img.ShowTransform).BuildUrl(img.PublicId)" /></a>
+    <div class="caption">@img.Caption</div>
+    <div class="public_id">@img.PublicId</div>
+</div>
+}
