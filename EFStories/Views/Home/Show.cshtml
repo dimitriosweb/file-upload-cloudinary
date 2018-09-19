@@ -14,10 +14,10 @@
 
 @foreach (EFStories.Models.Image img in @Model.Images)
 {
-<div class="item">
+    <div class="item">
 
-    <a href="@img.Url" target="_blank"><img src="@Model.CloudinaryApi.UrlImgUp.Format(img.Format).Transform(img.ShowTransform).BuildUrl(img.PublicId)" /></a>
-    <div class="caption">@img.Caption</div>
-    <div class="public_id">@img.PublicId</div>
-</div>
+        <a href="@img.Url" target="_blank"><img src="@Model.CloudinaryApi.UrlImgUp.Format(img.Format).Transform(img.ShowTransform).BuildUrl(img.PublicId)" /></a>
+        <div class="caption">@img.Caption</div>
+        <div class="public_id">@img.PublicId</div>
+    </div>
 }

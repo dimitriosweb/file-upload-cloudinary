@@ -1,6 +1,9 @@
-﻿using EFStories.Models;
+﻿using CloudinaryDotNet;
+using EFStories.Models;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -9,6 +12,17 @@ namespace EFStories.Controllers
 {
     public class HomeController : Controller
     {
+        static Cloudinary m_cloudinary;
+        public HomeController()
+        {
+            Account acc = new Account(
+            Properties.Settings.Default.CloudName,
+            Properties.Settings.Default.ApiKey,
+            Properties.Settings.Default.ApiSecret);
+
+            m_cloudinary = new Cloudinary(acc);
+        }
+
         public ActionResult Index()
         {
             BackgroundUploader bgUploader = GetUploader();
@@ -16,8 +30,6 @@ namespace EFStories.Controllers
             if (bgUploader.Progress < 100)
                 return PartialView("Upload", bgUploader);
 
-            // The whole uploader object will be passed to view as model
-            // This is to show usage of some API helpers that builds HTML or URL
             return PartialView("Show", bgUploader);
         }
 
@@ -37,7 +49,7 @@ namespace EFStories.Controllers
 
             if (bgUploader == null)
             {
-                bgUploader = new BackgroundUploader();
+                bgUploader = new BackgroundUploader(m_cloudinary);
                 Session.Add("bguploader", bgUploader);
                 bgUploader.Upload();
                 return bgUploader;

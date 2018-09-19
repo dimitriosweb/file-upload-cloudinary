@@ -12,6 +12,7 @@ namespace EFStories.Models
     public class BackgroundUploader
     {
         Cloudinary m_cloudinary;
+
         // Parameters of uploading tasks
         List<ImageUploadParamsExt> m_uploadParams;
 
@@ -27,17 +28,9 @@ namespace EFStories.Models
 
         public Api CloudinaryApi { get { return m_cloudinary.Api; } }
 
-        public BackgroundUploader()
+        public BackgroundUploader(Cloudinary m_cloudinary)
         {
-            // Set up cloudinary object
-
-            Account acc = new Account(
-                Properties.Settings.Default.CloudName,
-                Properties.Settings.Default.ApiKey,
-                Properties.Settings.Default.ApiSecret);
-
-            m_cloudinary = new Cloudinary(acc);
-
+            this.m_cloudinary = m_cloudinary;
             // Check that application is properly installed in IIS
             string fileToCheck = HttpContext.Current.Server.MapPath("/Images/pizza.jpg");
             if (!File.Exists(fileToCheck))
@@ -51,55 +44,20 @@ namespace EFStories.Models
             m_uploadParams.Add(new ImageUploadParamsExt()
             {
                 File = new FileDescription(HttpContext.Current.Server.MapPath("/Images/pizza.jpg")),
-                Tags = "basic_mvc4",
+                Tags = "pizza tag",
 
-                Caption = "Local file, Fill 200x150",
+                Caption = "The best pizza is the world",
                 ShowTransform = new Transformation().Width(200).Height(150).Crop("fill")
             });
-
-            // Upload local image, uploaded with a public_id.
-            m_uploadParams.Add(new ImageUploadParamsExt()
-            {
-                File = new FileDescription(HttpContext.Current.Server.MapPath("/Images/pizza.jpg")),
-                PublicId = "custom_name",
-                Tags = "basic_mvc4",
-
-                Caption = "Local file, custom public ID, Fit into 200x150",
-                ShowTransform = new Transformation().Width(200).Height(150).Crop("fit")
-            });
-
-            // Eager transformations are applied as soon as the file is uploaded, instead of waiting
-            // for a user to request them. 
-            m_uploadParams.Add(new ImageUploadParamsExt()
-            {
-                File = new FileDescription(HttpContext.Current.Server.MapPath("/Images/lake.jpg")),
-                PublicId = "eager_custom_name",
-                Tags = "basic_mvc4",
-                EagerTransforms = new List<Transformation>(){
-                    new EagerTransformation().Width(200).Height(150).Crop("scale")},
-
-                Caption = "Local file, Eager transformation of scaling to 200x150",
-                ShowTransform = new Transformation().Width(200).Height(150).Crop("scale")
-            });
-
-            // In the two following examples, the file is fetched from a remote URL and stored in Cloudinary.
-            // This allows you to apply the same transformations, and serve those using Cloudinary's CDN layer.
-            m_uploadParams.Add(new ImageUploadParamsExt()
-            {
-                File = new FileDescription("http://res.cloudinary.com/demo/image/upload/couple.jpg"),
-                Tags = "basic_mvc4",
-
-                Caption = "Uploaded remote image, Face detection based 200x150 thumbnail",
-                ShowTransform = new Transformation().Width(200).Height(150).Crop("thumb").Gravity("faces")
-            });
-
+                      
+            
             m_uploadParams.Add(new ImageUploadParamsExt()
             {
                 File = new FileDescription("http://res.cloudinary.com/demo/image/upload/couple.jpg"),
                 Tags = "basic_mvc4",
                 Transformation = new Transformation().Width(500).Height(500).Crop("fit").Effect("saturation:-70"),
 
-                Caption = "Uploaded remote image, Fill 200x150, round corners, apply the sepia effect",
+                Caption = "Young couple, Fill 200x150, round corners, apply the sepia effect",
                 ShowTransform = new Transformation().Width(200).Height(150).Crop("fill").Gravity("face").Radius(10).Effect("sepia")
             });
 
